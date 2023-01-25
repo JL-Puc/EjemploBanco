@@ -12,8 +12,6 @@ import Model.Cliente;
 public class DaoFichero {
 
     private File archivo;
-    private static DaoFichero dao = new DaoFichero();
-
 
     public void crearArchivo(){
              archivo = new File("Ejemplo01\\Banco.txt");
@@ -48,11 +46,12 @@ public class DaoFichero {
         File archivo = new File("Ejemplo01\\Banco.txt");
 
         StringTokenizer token;
-        Scanner escaner = new Scanner(this.archivo);
+        Scanner escaner = new Scanner(archivo);
         String linea;
         String nombreExistente;
         String numeroCliente;
         int contador = 0;
+        int numeroMAX = 0;
 
         while(escaner.hasNext() && contador == 0) {
              linea = escaner.nextLine();
@@ -66,7 +65,11 @@ public class DaoFichero {
                 cliente.setNumeroCliente(Integer.parseInt(numeroCliente));
                 contador = 1;
              } else {
-                 cliente.setNumeroCliente(Integer.parseInt(numeroCliente) + 1);
+                
+                if( numeroMAX < Integer.parseInt(numeroCliente)) {
+                    numeroMAX = Integer.parseInt(numeroCliente);
+                }
+                 cliente.setNumeroCliente(numeroMAX + 1);
              }
 
         }
