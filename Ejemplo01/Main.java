@@ -1,38 +1,55 @@
 package Ejemplo01;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 
 import DAO.DaoFichero;
-import Exceptions.IncorrectData;
+import Exceptions.ClienteSinCuenta;
 import Model.Cliente;
+import Model.Cuenta;
 
 public class Main {
     
     public static void main(String[] args) {
-
-        Scanner entrada = new Scanner(System.in);
         
         DaoFichero dao = new DaoFichero();
 
         String nombre;
-        long numeroCuenta;
+        Cliente cliente1;
+        Cuenta cuenta;
+        String idCuenta;
         double saldo;
+        int opcion;
 
+        opcion = Integer.parseInt(JOptionPane.showInputDialog("Cliente nuevo -Presione 1 - para agregar primera cuenta a su usuario \n\n" + "Cliente existente -Presione 2 - para agregar una nueva cuenta a su usuario \n\n"  ));
 
-try {
-        nombre = JOptionPane.showInputDialog("Ingrese el nombre del cliente: ",null);
-        numeroCuenta = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el número de cuenta del cliente: ", null));
-        saldo = Double.parseDouble(JOptionPane.showInputDialog("Ingrese el saldo del cliente: ", null));
+        nombre = JOptionPane.showInputDialog("Ingrese el nombre del cliente: ");
+        idCuenta = JOptionPane.showInputDialog("Ingrese el número de cuenta: " );
+        saldo = Double.parseDouble(JOptionPane.showInputDialog("Ingrese el saldo:"));
+        
+        cuenta = new Cuenta(idCuenta, saldo);
+        cliente1 = new Cliente(nombre, cuenta);
 
-        Cliente cliente1 = new Cliente(nombre, numeroCuenta, saldo);
-
-        dao.agregarCliente(cliente1);
-
-} catch (Exception e) {
-   JOptionPane.showMessageDialog(null,"Ingrese los datos con el formato correcto");
-}
+        try {
+            switch(opcion ) {
+                case 1:   
+                    dao.agregarCuenta(opcion, cliente1);
+    
+                    break;
+                case 2:
+                    dao.agregarCuenta(opcion, cliente1);
+    
+                    break;
+                default: 
+                    System.out.println("Opcion inválida");
+                    break;
+            }
+        } catch (IOException | ClienteSinCuenta e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+        
         
 
 

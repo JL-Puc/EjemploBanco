@@ -1,30 +1,22 @@
 package Model;
 
+import java.util.ArrayList;
+
 public class Cliente {
     
-    private int numeroCliente;
+    private int idCliente;
     private String nombre;
-    private long numeroCuenta;
-    private double saldo;
+    private ArrayList<Cuenta> cuentas = new ArrayList<Cuenta>();
 
-    public Cliente ( String nombre, long numeroCuenta, double saldo) {
+    public Cliente ( String nombre, Cuenta cuenta) {
         this.nombre = nombre;
-        this.numeroCuenta = numeroCuenta;
-        this.saldo = saldo;
+        this.cuentas.add(cuenta);
     }
 
     //Funciones 
 
 
     //Getters and Setters
-
-    public int getNumeroCliente() {
-        return numeroCliente;
-    }
-
-    public void setNumeroCliente(int numeroCliente) {
-        this.numeroCliente = numeroCliente;
-    }
 
     public String getNombre() {
         return nombre;
@@ -34,21 +26,29 @@ public class Cliente {
         this.nombre = nombre;
     }
 
-    public long getNumeroCuenta() {
-        return numeroCuenta;
+    public int getIdCliente() {
+        return idCliente;
     }
 
-    public void setNumeroCuenta(long numeroCuenta) {
-        this.numeroCuenta = numeroCuenta;
+    public void setIdCliente(int idCliente) {
+        this.idCliente = idCliente;
     }
 
-    public double getSaldo() {
-        return saldo;
+    public Cuenta ultimaCuentaAgregada( ) {
+        return cuentas.get(cuentas.size()-1);
     }
 
-    public void setSaldo(double saldo) {
-        this.saldo = saldo;
+    public ArrayList<Cuenta> getCuentas() {
+        return cuentas;
     }
+
+    public void setCuentas(ArrayList<Cuenta> cuentas) {
+        this.cuentas = cuentas;
+    }
+
+    
+
+    
 
 
 }

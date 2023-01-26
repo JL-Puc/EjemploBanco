@@ -1,6 +1,5 @@
 package Exceptions;
 
-import java.io.IOError;
 import java.io.IOException;
 
 public class IncorrectData extends IOException{
