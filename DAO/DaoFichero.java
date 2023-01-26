@@ -1,5 +1,6 @@
 package DAO;
 
+import java.awt.HeadlessException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -11,6 +12,8 @@ import java.util.StringTokenizer;
 import javax.swing.JOptionPane;
 
 import Exceptions.ClienteSinCuenta;
+import Exceptions.NumeroCuentaError;
+import Exceptions.SaldoIncorrecto;
 import Model.Cliente;
 import Model.Cuenta;
 
@@ -23,7 +26,7 @@ public class DaoFichero {
              archivo = new File("Ejemplo01\\Banco.txt");
     }
 
-    public void agregarCuenta( int opcion, Cliente cliente) throws IOException, ClienteSinCuenta{
+    public void agregarCuenta( int opcion, Cliente cliente) throws IOException, ClienteSinCuenta, HeadlessException, NumeroCuentaError, SaldoIncorrecto{
 
         if( archivo == null) {
             crearArchivo();
@@ -116,7 +119,7 @@ public class DaoFichero {
         return cliente;
     }
 
-    public boolean verificarNumeroCuenta ( Cliente cliente, String numeroCuenta) throws FileNotFoundException{
+    public boolean verificarNumeroCuenta ( Cliente cliente, String numeroCuenta) throws FileNotFoundException, NumeroCuentaError, SaldoIncorrecto{
         int contador = 0;
         cliente = traerCuentasCliente(cliente); 
 
@@ -128,14 +131,14 @@ public class DaoFichero {
         return listaNumerosCuentas.contains(numeroCuenta);
     }
 
-    public Cliente traerCuentasCliente ( Cliente cliente) throws FileNotFoundException{
+    public Cliente traerCuentasCliente ( Cliente cliente) throws FileNotFoundException, NumeroCuentaError, SaldoIncorrecto{
         File archivo = new File("Ejemplo01\\Banco.txt");
 
         StringTokenizer token;
         Scanner escaner = new Scanner(archivo);
         String linea;
         int idCliente;
-        double saldo;
+        String saldo;
         String idCuenta;
         int contador = 0;
 
@@ -148,7 +151,7 @@ public class DaoFichero {
              if( idCliente == cliente.getIdCliente()) {
                 token.nextToken(); //El nombre del cliente
                 idCuenta = token.nextToken();
-                saldo = Double.parseDouble(token.nextToken());
+                saldo = token.nextToken();
 
                 Cuenta cuenta = new Cuenta(idCuenta, saldo);
                 cliente.getCuentas().add(cuenta);

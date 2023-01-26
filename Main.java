@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import DAO.DaoFichero;
 import Exceptions.ClienteSinCuenta;
+import Exceptions.NameWrong;
 import Exceptions.NumeroCuentaError;
 import Exceptions.SaldoIncorrecto;
 import Model.Cliente;
@@ -28,13 +29,14 @@ public class Main {
         //opcion = Integer.parseInt(JOptionPane.showInputDialog("Cliente nuevo -Presione 1 - para agregar primera cuenta a su usuario \n\n" + "Cliente existente -Presione 2 - para agregar una nueva cuenta a su usuario \n\n"  ));
         
         //XD
-        //nombre = JOptionPane.showInputDialog("Ingrese el nombre del cliente: ");
        
         try {
+            nombre = JOptionPane.showInputDialog("Ingrese el nombre del cliente: ");
             idCuenta = JOptionPane.showInputDialog("Ingrese el número de cuenta: " );
             saldo = JOptionPane.showInputDialog("Ingrese el saldo:");
             cuenta = new Cuenta(idCuenta, saldo);
-        } catch (SaldoIncorrecto | NumeroCuentaError e) {
+            cliente1 = new Cliente(nombre, cuenta);
+        } catch (SaldoIncorrecto | NumeroCuentaError | NameWrong e) {
              System.out.println(e.getMessage());
         }
        

@@ -9,7 +9,8 @@ import Exceptions.NumeroCuentaError;
 public class Cuenta {
     private String idCuenta;
     private double saldo;
-
+    Pattern p;
+    Matcher m;
 
     public Cuenta ( String  idCuenta, String saldo) throws NumeroCuentaError, SaldoIncorrecto {
         setIdCuenta(idCuenta);
@@ -24,8 +25,8 @@ public class Cuenta {
 
     public void setIdCuenta(String idCuenta) throws NumeroCuentaError {
         
-        Pattern p = Pattern.compile("^[0-9]{16}$");
-        Matcher m = p.matcher(idCuenta);
+        p = Pattern.compile("^[0-9]{16}$");
+        m = p.matcher(idCuenta);
         if(m.matches()) {
             this.idCuenta = idCuenta;
         } else {
@@ -41,8 +42,8 @@ public class Cuenta {
 
 
     public void setSaldo(String saldo) throws SaldoIncorrecto {
-        Pattern p = Pattern.compile("^[0-9]+([\\.,][0-9]+)?$");
-        Matcher m = p.matcher(saldo);
+        p = Pattern.compile("^[0-9]+([\\.,][0-9]+)?$");
+        m = p.matcher(saldo);
         if(m.matches()) {
          this.saldo = Double.parseDouble(saldo);
         } else {
