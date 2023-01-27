@@ -4,18 +4,20 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import Exceptions.IdCustomerIncorrect;
 import Exceptions.NameWrong;
 
 public class Cliente {
     
-    private int idCliente;
+    private String idCliente;
     private String nombre;
     private ArrayList<Cuenta> cuentas = new ArrayList<Cuenta>();
     Pattern p;
     Matcher m;
 
-    public Cliente ( String nombre, Cuenta cuenta) throws NameWrong {
+    public Cliente ( String idCliente, String nombre, Cuenta cuenta) throws NameWrong, IdCustomerIncorrect {
         setNombre(nombre);
+        setIdCliente(idCliente);
         this.cuentas.add(cuenta);
     }
 
@@ -34,16 +36,23 @@ public class Cliente {
         if(m.matches()) {
             this.nombre = nombre;
         } else {
-            throw new NameWrong("Nombre incorrecto");
+            throw new NameWrong("Nombre incorrecto (El nombre comienza con Mayúscula y no contiene número o signos especiales)");
         }
     }
 
-    public int getIdCliente() {
+    public String getIdCliente() {
         return idCliente;
     }
 
-    public void setIdCliente(int idCliente) {
-        this.idCliente = idCliente;
+    public void setIdCliente(String idCliente) throws IdCustomerIncorrect {
+        p = Pattern.compile("^[0-9]{5}$");
+        m = p.matcher(idCliente);
+        if(m.matches()) {
+            this.idCliente = idCliente;
+        } else {
+            throw new IdCustomerIncorrect("El número de ID debe contener exactamente 10 digítos");
+        }
+
     }
 
     public Cuenta ultimaCuentaAgregada( ) {

@@ -1,6 +1,5 @@
 package DAO;
 
-import java.awt.HeadlessException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -11,7 +10,8 @@ import java.util.StringTokenizer;
 
 import javax.swing.JOptionPane;
 
-import Exceptions.ClienteSinCuenta;
+import Exceptions.IdClienteExistente;
+import Exceptions.IdCustomerIncorrect;
 import Exceptions.NumeroCuentaError;
 import Exceptions.SaldoIncorrecto;
 import Model.Cliente;
@@ -26,7 +26,7 @@ public class DaoFichero {
              archivo = new File("Ejemplo01\\Banco.txt");
     }
 
-    public void agregarCuenta( int opcion, Cliente cliente) throws IOException, ClienteSinCuenta, HeadlessException, NumeroCuentaError, SaldoIncorrecto{
+    public void agregarCuenta(Cliente cliente) throws IOException, IdClienteExistente, NumeroCuentaError, SaldoIncorrecto, IdCustomerIncorrect{
 
         if( archivo == null) {
             crearArchivo();
@@ -36,14 +36,9 @@ public class DaoFichero {
 
         FileWriter escribirArchivo;
 
-            if( opcion == 1) {
-                cliente = idPrimeraCuentaUsuario(cliente);
-            } else if(opcion == 2) {
-                cliente = idCuentaNuevaUsuario(cliente);
-            }
-
-            if( cliente.getIdCliente() != 0 ) {
-                if( !verificarNumeroCuenta(cliente, cliente.ultimaCuentaAgregada().getIdCuenta())) { // Aquí validamos si el número de cuenta del cliente ya existe, en dado caso exista no se registra
+            cliente = verificarIdClienteExistencia(cliente);
+            
+                if( false == verificarNumeroCuenta(cliente, cliente.ultimaCuentaAgregada().getIdCuenta())) { // Aquí validamos si el número de cuenta del cliente ya existe, en dado caso exista no se registra
 
                     escribirArchivo = new FileWriter("Ejemplo01\\Banco.txt",true);
 
@@ -52,115 +47,79 @@ public class DaoFichero {
                     JOptionPane.showMessageDialog(null, "Cliente agregado\n");
                     
                 } else {
-                    throw new ClienteSinCuenta("Error: Este número de cuenta ya existe, introduzca uno diferente");
+                    throw new NumeroCuentaError("El número de cuenta ya existe en tu usuario");
                 }
-                
-            } else {
-                throw new ClienteSinCuenta("Usted no tiene una cuenta existente");
-            }
 
-
-    }
-
-    public Cliente idPrimeraCuentaUsuario( Cliente cliente) throws FileNotFoundException {
-        File archivo = new File("Ejemplo01\\Banco.txt");
-
-        StringTokenizer token;
-        Scanner escaner = new Scanner(archivo);
-        String linea;
-        String numeroCliente;
-        int numeroMAX = 0;
-
-        while(escaner.hasNext()) {
-             linea = escaner.nextLine();
-             token = new StringTokenizer(linea,",");
-
-             numeroCliente = token.nextToken();
-                
-                if( numeroMAX < Integer.parseInt(numeroCliente)) {
-                    numeroMAX = Integer.parseInt(numeroCliente);
-                }  
-
-        }
-        cliente.setIdCliente(numeroMAX + 1);    
-        escaner.close();
-        
-        return cliente;
-    }
-
-    public Cliente idCuentaNuevaUsuario( Cliente cliente) throws FileNotFoundException {
-        File archivo = new File("Ejemplo01\\Banco.txt");
-
-        StringTokenizer token;
-        Scanner escaner = new Scanner(archivo);
-        String linea;
-        String nombreExistente;
-        String numeroCliente;
-        int contador = 0;
-
-        while(escaner.hasNext() && contador == 0) {
-             linea = escaner.nextLine();
-             token = new StringTokenizer(linea,",");
-
-             numeroCliente = token.nextToken();
-             nombreExistente = token.nextToken();
-             String nombreCliente = cliente.getNombre();
-
-             if(nombreCliente.equals(nombreExistente) ) {
-                cliente.setIdCliente(Integer.parseInt(numeroCliente));
-                contador = 1;
-             } else {
-                cliente.setIdCliente(0);
-             }
-
-        }
-        escaner.close();
-        
-        return cliente;
     }
 
     public boolean verificarNumeroCuenta ( Cliente cliente, String numeroCuenta) throws FileNotFoundException, NumeroCuentaError, SaldoIncorrecto{
         int contador = 0;
-        cliente = traerCuentasCliente(cliente); 
+        cliente = traerDatosCliente(cliente); 
 
         while( contador < cliente.getCuentas().size()-1 ) {
             listaNumerosCuentas.add(cliente.getCuentas().get(contador).getIdCuenta()); //Llenamos la lista de las cuentas de un solo cliente
             contador++;
         }
         
-        return listaNumerosCuentas.contains(numeroCuenta);
+        return listaNumerosCuentas.contains(numeroCuenta); //Si es verdad entonces esa cuenta existe.
     }
 
-    public Cliente traerCuentasCliente ( Cliente cliente) throws FileNotFoundException, NumeroCuentaError, SaldoIncorrecto{
+    public Cliente traerDatosCliente ( Cliente cliente) throws FileNotFoundException, NumeroCuentaError, SaldoIncorrecto{
         File archivo = new File("Ejemplo01\\Banco.txt");
 
         StringTokenizer token;
         Scanner escaner = new Scanner(archivo);
         String linea;
-        int idCliente;
+        String idCliente;
         String saldo;
         String idCuenta;
-        int contador = 0;
 
-        while(escaner.hasNext() && contador == 0) {
+        while(escaner.hasNext()) {
              linea = escaner.nextLine();
              token = new StringTokenizer(linea,",");
 
-             idCliente = Integer.parseInt(token.nextToken());
+             idCliente = token.nextToken();
 
-             if( idCliente == cliente.getIdCliente()) {
-                token.nextToken(); //El nombre del cliente
+             if( idCliente.equals(cliente.getIdCliente())) {
+                String nombre = token.nextToken(); //El nombre del cliente
                 idCuenta = token.nextToken();
                 saldo = token.nextToken();
 
                 Cuenta cuenta = new Cuenta(idCuenta, saldo);
                 cliente.getCuentas().add(cuenta);
              }
-
+        
         }
         escaner.close();
 
         return cliente;
+    }
+
+    public Cliente verificarIdClienteExistencia( Cliente cliente) throws FileNotFoundException, IdCustomerIncorrect {
+        File archivo = new File("Ejemplo01\\Banco.txt");
+
+        StringTokenizer token;
+        Scanner escaner = new Scanner(archivo);
+        String linea;
+        String numeroCliente;
+
+        while(escaner.hasNext()) {
+             linea = escaner.nextLine();
+             token = new StringTokenizer(linea,",");
+
+             numeroCliente = token.nextToken();
+
+             if(numeroCliente.equals(cliente.getIdCliente()) ) {
+                cliente.setIdCliente(numeroCliente);
+                return cliente; // Retornar el ID del cliente en un String
+             }
+
+        }
+        escaner.close();
+
+
+        return cliente;
+
     }
 
 
