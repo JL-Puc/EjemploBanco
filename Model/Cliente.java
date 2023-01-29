@@ -1,11 +1,6 @@
 package Model;
 
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import Exceptions.IdCustomerIncorrect;
-import Exceptions.NameWrong;
 
 public class Cliente {
     
@@ -13,7 +8,7 @@ public class Cliente {
     private String nombre;
     private ArrayList<Cuenta> cuentas = new ArrayList<Cuenta>();
 
-    public Cliente ( String idCliente, String nombre, Cuenta cuenta) throws NameWrong, IdCustomerIncorrect {
+    public Cliente ( String idCliente, String nombre, Cuenta cuenta) {
         setNombre(nombre);
         setIdCliente(idCliente);
         this.cuentas.add(cuenta);
@@ -28,7 +23,7 @@ public class Cliente {
         return nombre;
     }
 
-    public void setNombre(String nombre) throws NameWrong {
+    public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
@@ -36,7 +31,7 @@ public class Cliente {
         return idCliente;
     }
 
-    public void setIdCliente(String idCliente) throws IdCustomerIncorrect {
+    public void setIdCliente(String idCliente) {
         this.idCliente = idCliente;
     }
 
