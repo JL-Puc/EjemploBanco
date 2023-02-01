@@ -41,7 +41,7 @@ public class DaoFichero {
 
                     escribirArchivo = new FileWriter("Ejemplo01\\Banco.txt",true);
 
-                    escribirArchivo.write("\n" + cliente.getIdCliente() + "," + cliente.getNombre() + "," + cliente.getCuentas().get(0).getIdCuenta() + "," + cliente.getCuentas().get(0).getSaldo());
+                    escribirArchivo.append("\n" + cliente.getIdCliente() + "," + cliente.getNombre() + "," + cliente.getCuentas().get(0).getIdCuenta() + "," + cliente.getCuentas().get(0).getSaldo());
                     escribirArchivo.close();
                     JOptionPane.showMessageDialog(null, "Cliente agregado\n");
                     
@@ -129,7 +129,7 @@ public class DaoFichero {
     }
 
     public ArrayList<Cliente> traerClientes ( ) throws FileNotFoundException { //Con un ArrayList traemos todos los clientes con sus datos 
-        File archivo = new File("Ejemplo01\\Banco.txt");
+        File archivo = new File("ejemplo-JL-Puc\\Ejemplo01\\Banco.txt");
 
         StringTokenizer token;
         Scanner escaner = new Scanner(archivo);
@@ -178,19 +178,9 @@ public class DaoFichero {
     public void imprimirClientes( ) throws FileNotFoundException{
         listaClientes = traerClientes();
         int contadorClientes = 0;
-        int contadorCuentas = 0;
        
         while(contadorClientes < listaClientes.size()) {
-            System.out.println("\nID: " + listaClientes.get(contadorClientes).getIdCliente() + "\tNombre: " + listaClientes.get(contadorClientes).getNombre()); 
-
-            
-
-            while( contadorCuentas < listaClientes.get(contadorClientes).getCuentas().size() ){
-                System.out.println("Cuenta: " + listaClientes.get(contadorClientes).getCuentas().get(contadorCuentas).getIdCuenta() + "\t\t" + listaClientes.get(contadorClientes).getCuentas().get(contadorCuentas).getSaldo());
-
-                contadorCuentas++;
-            }
-            contadorCuentas = 0;
+            System.out.println(listaClientes.get(contadorClientes).imprimirCliente()); 
             contadorClientes++;
         }
                 

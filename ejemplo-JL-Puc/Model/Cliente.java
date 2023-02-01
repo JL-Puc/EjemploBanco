@@ -15,6 +15,18 @@ public class Cliente {
     }
 
     //Funciones 
+    public String imprimirCliente( ) {
+        String clienteDatos = "ID: " + idCliente + "\tNombre: " + nombre + "\n";
+        int contadorCuentas = 0;
+
+        while( contadorCuentas < cuentas.size() ){
+            clienteDatos += "Cuenta: " + cuentas.get(contadorCuentas).getIdCuenta() + "\t\tSaldo: " + cuentas.get(contadorCuentas).getSaldo() + "\n";
+
+            contadorCuentas++;
+        }
+
+        return clienteDatos;
+    }
 
 
     //Getters and Setters
