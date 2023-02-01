@@ -12,8 +12,6 @@ public class Main {
     public static void main(String[] args) {
 
         String nombre;
-        Cliente cliente1;
-        Cuenta cuenta;
         String idCuenta = "";
         String saldo;
         String idCliente;
@@ -21,7 +19,7 @@ public class Main {
         ControladorCliente control = new ControladorCliente();
         
         
-            idCliente = "00000";
+            idCliente = "12453";
             nombre = "Luis";
             idCuenta = "1234567822222222";
             saldo = "5555";
@@ -29,14 +27,13 @@ public class Main {
 
                 try {
                     listaClientes.cargarClientes();
-                    control = new ControladorCliente(listaClientes.getListaClientes());
-                    control.agregarClienteValido(nombre, idCliente, idCuenta, saldo);
+                    control = new ControladorCliente(listaClientes);
                     control.imprimirClientes();
-                    control.borrarCliente(nombre, idCliente);
+                    System.out.println("\n\n");
+
+                    control.borrarCuentaCliente(nombre, idCliente, idCuenta);
                     control.imprimirClientes();
                 } catch (IOException e) {
-                    System.out.println(e.getMessage());
-                } catch (ExcepcionCliente e) {              
                     System.out.println(e.getMessage());
                 } catch (ExcepcionCuenta e) {
                     System.out.println(e.getMessage());

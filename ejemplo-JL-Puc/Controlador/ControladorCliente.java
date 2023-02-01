@@ -10,18 +10,21 @@ import Exceptions.ExcepcionCliente;
 import Exceptions.ExcepcionCuenta;
 import Model.Cliente;
 import Model.Cuenta;
+import Model.ListaDeClientes;
 
 public class ControladorCliente {
     
     Cliente cliente = new Cliente();
-    ArrayList<Cliente> listaClientes = new ArrayList<>();
+    ListaDeClientes listaClientes = new ListaDeClientes();
     DaoFichero daoFichero = new DaoFichero();
+    ControladorCuenta controladorCuenta;
     Pattern p;
     Matcher m;
 
     //Constructor
-    public ControladorCliente(ArrayList<Cliente> listaClientes) {
+    public ControladorCliente(ListaDeClientes listaClientes) {
         this.listaClientes = listaClientes;
+        this.controladorCuenta = new ControladorCuenta(this.listaClientes);
     }
 
     public ControladorCliente( ) {
@@ -40,7 +43,7 @@ public class ControladorCliente {
                     Cuenta cuenta = new Cuenta(idCuenta, saldo);
                     Cliente cliente = new Cliente(idCliente, nombreCliente, cuenta);
 
-                    listaClientes.add(cliente);
+                    listaClientes.agregarCliente(cliente);
 
                     //daoFichero.agregarCuenta(cliente);
                     
@@ -58,7 +61,7 @@ public class ControladorCliente {
         cliente = traerDatosCliente(idCliente);
 
         if( nombreCliente.equals(cliente.getNombre()) && idCliente.equals(cliente.getIdCliente())) {
-            this.listaClientes.remove(cliente);
+            this.listaClientes.eliminar(cliente);
             
         } else {
             throw new ExcepcionCliente("ID del cliente y el nombre no coinciden");
@@ -66,7 +69,20 @@ public class ControladorCliente {
 
     }
 
+    //Borrar una cuenta del cliente
+    public void borrarCuentaCliente(String nombreCliente,  String idCliente, String idCuenta ) throws ExcepcionCuenta {
+        cliente = traerDatosCliente(idCliente);
+        controladorCuenta.borrarCuenta(nombreCliente, idCliente, idCuenta, cliente);
+    }
 
+    //Depositar dinero en cuenta
+    public void depositarDineroCuenta(String nombreCliente,  String idCliente, String idCuenta, double deposito) throws ExcepcionCuenta, ExcepcionCliente {
+        cliente = traerDatosCliente(idCliente);
+        
+        listaClientes.getCliente(idCliente);
+        controladorCuenta.depositarSaldoCuenta(cliente, nombreCliente, idCuenta, deposito);
+
+    }
 
 
 
@@ -134,23 +150,17 @@ public class ControladorCliente {
     }
 
     public boolean verificarIdClienteExistencia( String idCliente, String nombreCliente) throws ExcepcionCliente {
-        int contadorClientes = 0;
-        while(contadorClientes < this.listaClientes.size()) {
-
-             if(this.listaClientes.get(contadorClientes).getIdCliente().equals(idCliente) &&  !this.listaClientes.get(contadorClientes).getNombre().equals(nombreCliente)) {
+    
+        if(this.listaClientes.getCliente(idCliente).getIdCliente().equals(idCliente) &&  !this.listaClientes.getCliente(idCliente).getNombre().equals(nombreCliente)) {
                 
-                throw new ExcepcionCliente("El ID ya existe, ingrese uno diferente");
-             }
-
-             contadorClientes++;
+        throw new ExcepcionCliente("El ID ya existe, ingrese uno diferente");
         }
-        
 
         return false;
 
     }
 
-    public boolean verificarNumeroCuenta (String idCliente, String idCuenta) throws ExcepcionCuenta {
+    public boolean verificarNumeroCuenta (String idCliente, String idCuenta) throws ExcepcionCuenta, ExcepcionCliente {
 
         int contador = 0;
 
@@ -169,22 +179,8 @@ public class ControladorCliente {
         return false;
     }
 
-    public Cliente traerDatosCliente ( String idCliente) {
-        
-        Cliente cliente = new Cliente();
-        int contadorClientes = 0;
-
-        while(contadorClientes < this.listaClientes.size()) {
-
-             if( this.listaClientes.get(contadorClientes).getIdCliente().equals(idCliente)) {
-                cliente = this.listaClientes.get(contadorClientes);
-                return cliente;
-             }
-        
-             contadorClientes++;
-        }
-
-        return cliente;
+    public Cliente traerDatosCliente ( String idCliente) throws ExcepcionCliente {
+        return this.listaClientes.getCliente(idCliente);
     }
 
 
@@ -192,7 +188,7 @@ public class ControladorCliente {
         int contadorClientes = 0;
        
         while(contadorClientes < this.listaClientes.size()) {
-            System.out.println(this.listaClientes.get(contadorClientes).imprimirCliente()); 
+            System.out.println(this.listaClientes.getCliente(contadorClientes).imprimirCliente()); 
             contadorClientes++;
         }
                 

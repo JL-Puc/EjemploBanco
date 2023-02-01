@@ -1,5 +1,6 @@
 package Model;
 
+import Exceptions.ExcepcionCuenta;
 
 public class Cuenta {
     private String idCuenta;
@@ -10,6 +11,23 @@ public class Cuenta {
         setSaldo(saldo);
     }
 
+    public boolean depositarSaldo(double deposito ) {
+        double saldoActual = Double.parseDouble(saldo);
+
+        this.saldo = String.valueOf(saldoActual + deposito);
+        return true;
+    }
+
+    public boolean retirarSaldo(double retiro) throws ExcepcionCuenta{
+        double saldoActual = Double.parseDouble(saldo);
+        
+        if(saldoActual < retiro) {
+            throw new ExcepcionCuenta("Saldo insuficiente: " + saldoActual);
+        } else {
+            this.saldo = String.valueOf(saldoActual - retiro);
+            return true;
+        }
+    }
 
     public String getIdCuenta() {
         return idCuenta;

@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import DAO.DaoFichero;
+import Exceptions.ExcepcionCliente;
 
 public class ListaDeClientes {
     
@@ -17,8 +18,8 @@ public class ListaDeClientes {
         listaClientes.add(cliente);
     }
 
-    public void eliminar(int idCliente ) {
-        listaClientes.remove(idCliente);
+    public void eliminar(Cliente cliente ) {
+        listaClientes.remove(cliente);
     }
 
     public void cargarClientes( ) throws FileNotFoundException{
@@ -30,4 +31,19 @@ public class ListaDeClientes {
         return listaClientes;
     }
 
+    public Cliente getCliente(String idCliente ) throws ExcepcionCliente {
+        int contador = 0;
+
+        while(contador < listaClientes.size() ) {
+            if(idCliente.equals(listaClientes.get(contador)) ){
+                return listaClientes.get(contador);
+            }
+        contador++;
+        }
+        throw new ExcepcionCliente("ID no encontrado");
+    }
+
+    public int size( ) {
+        return listaClientes.size();
+    }
 }
