@@ -14,6 +14,10 @@ public class Cliente {
         this.cuentas.add(cuenta);
     }
 
+    public Cliente (){
+        
+    }
+
     //Funciones 
     public String imprimirCliente( ) {
         String clienteDatos = "ID: " + idCliente + "\tNombre: " + nombre + "\n";
@@ -28,6 +32,18 @@ public class Cliente {
         return clienteDatos;
     }
 
+    public void borrarCuenta(String idCuenta ) {
+        int contador = 0;
+
+        while(contador < cuentas.size() ) {
+
+            if( idCuenta.equals(cuentas.get(contador).getIdCuenta())) {
+                cuentas.remove(contador);
+            }
+
+        }
+
+    }
 
     //Getters and Setters
 

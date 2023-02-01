@@ -17,8 +17,8 @@ public class ListaDeClientes {
         listaClientes.add(cliente);
     }
 
-    public void eliminar(int indice ) {
-        listaClientes.remove(indice);
+    public void eliminar(int idCliente ) {
+        listaClientes.remove(idCliente);
     }
 
     public void cargarClientes( ) throws FileNotFoundException{
@@ -26,5 +26,8 @@ public class ListaDeClientes {
         listaClientes = daoFichero.traerClientes();
     }
 
+    public ArrayList<Cliente> getListaClientes ( ) {
+        return listaClientes;
+    }
 
 }

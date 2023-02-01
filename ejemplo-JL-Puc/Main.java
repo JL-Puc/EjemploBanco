@@ -1,24 +1,15 @@
 
-
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.SocketTimeoutException;
-import java.util.ResourceBundle.Control;
-
-import javax.swing.JOptionPane;
-
 import Controlador.ControladorCliente;
-import DAO.DaoFichero;
 import Exceptions.ExcepcionCliente;
 import Exceptions.ExcepcionCuenta;
 import Model.Cliente;
 import Model.Cuenta;
+import Model.ListaDeClientes;
 
 public class Main {
     
     public static void main(String[] args) {
-        
-  
 
         String nombre;
         Cliente cliente1;
@@ -26,32 +17,32 @@ public class Main {
         String idCuenta = "";
         String saldo;
         String idCliente;
-        DaoFichero daoFichero = new DaoFichero();
+        ListaDeClientes listaClientes = new ListaDeClientes();
+        ControladorCliente control = new ControladorCliente();
         
-        /*
-            idCliente = "12453";
+        
+            idCliente = "00000";
             nombre = "Luis";
-            idCuenta = "1234567811111111";
-            saldo = "1243";
-            cuenta = new Cuenta(idCuenta, saldo);
-            cliente1 = new Cliente(idCliente, nombre, cuenta);
-            
-                ControladorCliente control = new ControladorCliente(cliente1, daoFichero);
+            idCuenta = "1234567822222222";
+            saldo = "5555";
+
 
                 try {
-                    control.crearClienteValido(cliente1);
-                } catch (ExcepcionCliente | ExcepcionCuenta | IOException e) {
+                    listaClientes.cargarClientes();
+                    control = new ControladorCliente(listaClientes.getListaClientes());
+                    control.agregarClienteValido(nombre, idCliente, idCuenta, saldo);
+                    control.imprimirClientes();
+                    control.borrarCliente(nombre, idCliente);
+                    control.imprimirClientes();
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                } catch (ExcepcionCliente e) {              
+                    System.out.println(e.getMessage());
+                } catch (ExcepcionCuenta e) {
                     System.out.println(e.getMessage());
                 }
-         * 
-         */
+        
             
-        try {
-            daoFichero.imprimirClientes();
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
         
         
        
