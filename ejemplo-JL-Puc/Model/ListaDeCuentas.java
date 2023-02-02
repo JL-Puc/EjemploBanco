@@ -1,10 +1,11 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import Exceptions.ExcepcionCliente;
 
-public class ListaDeCuentas {
+public class ListaDeCuentas implements Serializable{
 
     private ArrayList<Cuenta> listaCuenta;
 
@@ -12,15 +13,15 @@ public class ListaDeCuentas {
         listaCuenta = new ArrayList<>();
     }
 
-    public void agregarCliente(Cuenta cuenta) {
+    public void agregarCuenta(Cuenta cuenta) {
         listaCuenta.add(cuenta);
     }
 
-    public void eliminar(Cuenta cuenta ) {
-        listaCuenta.remove(cuenta);
+    public void eliminarCuenta(String idCuenta ) throws ExcepcionCliente {
+        listaCuenta.remove(getCuenta(idCuenta));
     }
 
-    public ArrayList<Cuenta> getListaClientes ( ) {
+    public ArrayList<Cuenta> getListaCuentas ( ) {
         return listaCuenta;
     }
 
@@ -28,18 +29,21 @@ public class ListaDeCuentas {
         int contador = 0;
 
         while(contador < listaCuenta.size() ) {
-            if(idCuenta.equals(listaCuenta.get(contador)) ){
+            if(idCuenta.equals(listaCuenta.get(contador).getIdCuenta()) ){
                 return listaCuenta.get(contador);
             }
         contador++;
         }
-        throw new ExcepcionCliente("ID no encontrado");
+        throw new ExcepcionCliente("Número de cuenta no encontrado");
     }
 
     public int size( ) {
         return listaCuenta.size();
     }
 
+    public Cuenta ultimaCuentaAgregada() {
+        return listaCuenta.get(listaCuenta.size()-1);
+    }
 
 
 

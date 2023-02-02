@@ -1,22 +1,24 @@
 package Model;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 
-public class Cliente {
+import Exceptions.ExcepcionCliente;
+
+public class Cliente implements Serializable{
     
     private String idCliente;
     private String nombre;
-    private ArrayList<Cuenta> cuentas = new ArrayList<Cuenta>();
+    private ListaDeCuentas cuentas = new ListaDeCuentas();
 
     public Cliente ( String idCliente, String nombre, Cuenta cuenta) {
         setNombre(nombre);
         setIdCliente(idCliente);
-        this.cuentas.add(cuenta);
+        this.cuentas.agregarCuenta(cuenta);
     }
 
     public Cliente (){
-        
     }
+
 
     //Funciones 
     public String imprimirCliente( ) {
@@ -24,7 +26,7 @@ public class Cliente {
         int contadorCuentas = 0;
 
         while( contadorCuentas < cuentas.size() ){
-            clienteDatos += "Cuenta: " + cuentas.get(contadorCuentas).getIdCuenta() + "\t\tSaldo: " + cuentas.get(contadorCuentas).getSaldo() + "\n";
+            clienteDatos += "Cuenta: " + cuentas.getListaCuentas().get(contadorCuentas).getIdCuenta() + "\t\tSaldo: " + cuentas.getListaCuentas().get(contadorCuentas).getSaldo() + "\n";
 
             contadorCuentas++;
         }
@@ -32,17 +34,8 @@ public class Cliente {
         return clienteDatos;
     }
 
-    public void borrarCuenta(String idCuenta ) {
-        int contador = 0;
-
-        while(contador < cuentas.size() ) {
-
-            if( idCuenta.equals(cuentas.get(contador).getIdCuenta())) {
-                cuentas.remove(contador);
-            }
-
-        }
-
+    public void borrarCuenta(String idCuenta ) throws ExcepcionCliente {
+        cuentas.eliminarCuenta(idCuenta);
     }
 
     //Getters and Setters
@@ -64,20 +57,16 @@ public class Cliente {
     }
 
     public Cuenta ultimaCuentaAgregada( ) {
-        return cuentas.get(cuentas.size()-1);
+        return cuentas.getListaCuentas().get(cuentas.size()-1);
     }
 
-    public ArrayList<Cuenta> getCuentas() {
+    public ListaDeCuentas getCuentas() {
         return cuentas;
     }
 
-    public void setCuentas(ArrayList<Cuenta> cuentas) {
+    public void setCuentas(ListaDeCuentas cuentas) {
         this.cuentas = cuentas;
     }
-
-    
-
-    
 
 
 }

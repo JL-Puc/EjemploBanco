@@ -43,9 +43,9 @@ public class ControladorCliente {
                     Cuenta cuenta = new Cuenta(idCuenta, saldo);
                     Cliente cliente = new Cliente(idCliente, nombreCliente, cuenta);
 
-                    listaClientes.agregarCliente(cliente);
+                    this.listaClientes.agregarCliente(cliente);
 
-                    //daoFichero.agregarCuenta(cliente);
+                    daoFichero.agregarCuenta(cliente);
                     
                 }
                 
@@ -62,6 +62,7 @@ public class ControladorCliente {
 
         if( nombreCliente.equals(cliente.getNombre()) && idCliente.equals(cliente.getIdCliente())) {
             this.listaClientes.eliminar(cliente);
+            daoFichero.borrarCliente(idCliente);
             
         } else {
             throw new ExcepcionCliente("ID del cliente y el nombre no coinciden");
@@ -70,18 +71,31 @@ public class ControladorCliente {
     }
 
     //Borrar una cuenta del cliente
-    public void borrarCuentaCliente(String nombreCliente,  String idCliente, String idCuenta ) throws ExcepcionCuenta {
-        cliente = traerDatosCliente(idCliente);
-        controladorCuenta.borrarCuenta(nombreCliente, idCliente, idCuenta, cliente);
+    public void borrarCuentaCliente(String nombreCliente,  String idCliente, String idCuenta ) throws ExcepcionCuenta, ExcepcionCliente {
+        controladorCuenta.borrarCuenta(nombreCliente, idCliente, idCuenta);
     }
 
     //Depositar dinero en cuenta
-    public void depositarDineroCuenta(String nombreCliente,  String idCliente, String idCuenta, double deposito) throws ExcepcionCuenta, ExcepcionCliente {
-        cliente = traerDatosCliente(idCliente);
+    public void depositarDineroCuenta(String nombreCliente,  String idCliente, String idCuenta, double deposito) throws ExcepcionCuenta, ExcepcionCliente, IOException {
         
-        listaClientes.getCliente(idCliente);
-        controladorCuenta.depositarSaldoCuenta(cliente, nombreCliente, idCuenta, deposito);
+        controladorCuenta.depositarSaldoCuenta(nombreCliente, idCliente, idCuenta, deposito);
 
+    }
+
+    //Retirar dinero en cuenta
+    public void retirarDineroCuenta(String nombreCliente,  String idCliente, String idCuenta, double retiro) throws ExcepcionCuenta, ExcepcionCliente, IOException {
+        
+        controladorCuenta.retirarSaldoCuenta(nombreCliente, idCliente, idCuenta, retiro);
+    }
+
+    //Cambiar nombre de cliente
+    public void cambiarNombreCliente(String nombreCliente,  String idCliente ) throws ExcepcionCliente {
+        validarNombreCliente(nombreCliente); //Validar el nombre que se desea agregar como modificacion
+
+        listaClientes.getCliente(idCliente).setNombre(nombreCliente);
+
+        daoFichero.actualizarCliente(listaClientes.getCliente(idCliente));
+        
     }
 
 
@@ -150,7 +164,7 @@ public class ControladorCliente {
     }
 
     public boolean verificarIdClienteExistencia( String idCliente, String nombreCliente) throws ExcepcionCliente {
-    
+        
         if(this.listaClientes.getCliente(idCliente).getIdCliente().equals(idCliente) &&  !this.listaClientes.getCliente(idCliente).getNombre().equals(nombreCliente)) {
                 
         throw new ExcepcionCliente("El ID ya existe, ingrese uno diferente");
@@ -168,7 +182,7 @@ public class ControladorCliente {
         ArrayList<String> listaNumerosCuentas = new ArrayList<String>();
 
         while( contador < cliente.getCuentas().size() ) {
-            listaNumerosCuentas.add(cliente.getCuentas().get(contador).getIdCuenta()); //Llenamos la lista con los numeros de las cuentas del cliente
+            listaNumerosCuentas.add(cliente.getCuentas().getListaCuentas().get(contador).getIdCuenta()); //Llenamos la lista con los numeros de las cuentas del cliente
             contador++;
         }
 
@@ -188,7 +202,7 @@ public class ControladorCliente {
         int contadorClientes = 0;
        
         while(contadorClientes < this.listaClientes.size()) {
-            System.out.println(this.listaClientes.getCliente(contadorClientes).imprimirCliente()); 
+            System.out.println(this.listaClientes.getListaClientes().get(contadorClientes).imprimirCliente()); 
             contadorClientes++;
         }
                 

@@ -2,91 +2,69 @@ package DAO;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.StringTokenizer;
-
-import javax.swing.JOptionPane;
 
 import Exceptions.ExcepcionCliente;
 import Exceptions.ExcepcionCuenta;
 import Model.Cliente;
-import Model.Cuenta;
+import Model.SerializarObjeto;
 
 public class DaoFichero {
 
-    private File archivo;
     private ArrayList<Cliente> listaClientes = new ArrayList<Cliente>();
 
-    public void crearArchivo(){
-             archivo = new File("ejemplo-JL-Puc\\Ejemplo01\\Banco.txt");
-    }
 
     public void agregarCuenta(Cliente cliente) throws ExcepcionCuenta, IOException, ExcepcionCliente{
 
-        if( archivo == null) {
-            crearArchivo();
+        SerializarObjeto.serializarObjeto("ejemplo-JL-Puc\\Ejemplo01\\" + cliente.getIdCliente() + ".txt", cliente);
+    }
+
+    public Cliente iniciarDatos(String idCliente) throws ExcepcionCliente{
+        Cliente clienteAux = SerializarObjeto.deserializarObjeto("ejemplo-JL-Puc\\Ejemplo01\\" + idCliente + ".txt", Cliente.class);
+
+        if (clienteAux != null || !clienteAux.getIdCliente().equals(null)){
+            System.out.println("Cargado datos del archivo del cliente: " + idCliente);
+            return clienteAux;
+        } else {
+           throw new ExcepcionCliente("ID inexistente");
         }
-
-
-
-        FileWriter escribirArchivo;
-
-                    escribirArchivo = new FileWriter("ejemplo-JL-Puc\\Ejemplo01\\Banco.txt",true);
-
-                    escribirArchivo.append("\n" + cliente.getIdCliente() + "," + cliente.getNombre() + "," + cliente.getCuentas().get(0).getIdCuenta() + "," + cliente.getCuentas().get(0).getSaldo());
-                    escribirArchivo.close();
-                    JOptionPane.showMessageDialog(null, "Cliente agregado\n");
-                          
 
     }
 
+    public void guardarCliente(String idCliente){
+        SerializarObjeto.serializarObjeto("ejemplo-JL-Puc\\Ejemplo01\\" + idCliente + ".txt", Cliente.class);
+    }
 
-    public ArrayList<Cliente> traerClientes ( ) throws FileNotFoundException { //Con un ArrayList traemos todos los clientes con sus datos 
-        File archivo = new File("ejemplo-JL-Puc\\Ejemplo01\\Banco.txt");
+    public void borrarCliente(String idCliente) {
+        File archivo = new File("ejemplo-JL-Puc\\Ejemplo01\\" + idCliente + ".txt");
+        archivo.delete();
+    }
 
-        StringTokenizer token;
-        Scanner escaner = new Scanner(archivo);
-        String linea;
-        String idCliente = "";
-        String saldo = "";
-        String idCuenta = "";
-        String nombreCliente = "";
-        int contador;
-        Cuenta cuenta;
-        Cliente cliente;
+    public void actualizarCliente(Cliente cliente) throws ExcepcionCliente{
+        String path = "ejemplo-JL-Puc\\Ejemplo01\\" + cliente.getIdCliente() + ".txt";
+        File archivo = new File(path);
 
-        while(escaner.hasNext()) { //Leer cada línea del Banco.txt
-             contador = 0;
-             linea = escaner.nextLine();
-             token = new StringTokenizer(linea,",");
-
-             idCliente = token.nextToken();
-             nombreCliente = token.nextToken();
-             idCuenta =token.nextToken();
-             saldo = token.nextToken();
-
-              cuenta = new Cuenta(idCuenta, saldo);
-              cliente = new Cliente(idCliente, nombreCliente, cuenta); //Crear el cliente que se leyó del archivo
-
-             listaClientes.add(cliente); //Añadirlo a la lista de clientes
-            
-            
-             while( contador < listaClientes.size() - 1 ) { // Iterador para recorrer la listas de clientes 
-                if( listaClientes.get(contador).getIdCliente().equals(idCliente) && listaClientes.get(contador).getNombre().equals(nombreCliente)) { // Si el nombre y el id de del cliente recién leído coincide con alguno de la lista entonces se le agrega la cuenta recien creada al cliente que coincide de la lista
-                    listaClientes.get(contador).getCuentas().add(cuenta);
-                    listaClientes.remove(cliente); //Enseguida se borra de la lista para que no se repita el cliente
-                } else {
-                    contador++;
-                }
-                
-             }
-             
-             
+        if( archivo.exists()) {
+            SerializarObjeto.serializarObjeto(path, cliente);
+        } else {
+            throw new ExcepcionCliente("Error al actualizar");
         }
-        escaner.close();
+    }
+
+
+    public ArrayList<Cliente> traerClientes ( ) throws FileNotFoundException, ExcepcionCliente { //Con un ArrayList traemos todos los clientes con sus datos 
+        File carpeta = new File("ejemplo-JL-Puc\\Ejemplo01"); 
+
+        String[] listaArchivos = carpeta.list();
+        Cliente cliente;
+        
+        for(String string : listaArchivos ) {
+            StringTokenizer token = new StringTokenizer(string, ".");
+            cliente = iniciarDatos(token.nextToken());
+            listaClientes.add(cliente);
+        }
 
         return listaClientes;
     }

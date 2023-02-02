@@ -1,8 +1,10 @@
 package Model;
 
+import java.io.Serializable;
+
 import Exceptions.ExcepcionCuenta;
 
-public class Cuenta {
+public class Cuenta implements Serializable{
     private String idCuenta;
     private String saldo;
 
