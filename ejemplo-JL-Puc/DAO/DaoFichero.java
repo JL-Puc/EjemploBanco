@@ -16,7 +16,7 @@ public class DaoFichero {
     private ArrayList<Cliente> listaClientes = new ArrayList<Cliente>();
 
 
-    public void agregarCuenta(Cliente cliente) throws ExcepcionCuenta, IOException, ExcepcionCliente{
+    public void agregarCliente(Cliente cliente) throws ExcepcionCuenta, IOException, ExcepcionCliente{
 
         SerializarObjeto.serializarObjeto("ejemplo-JL-Puc\\DataClientes\\" + cliente.getIdCliente() + ".txt", cliente);
     }
@@ -33,9 +33,6 @@ public class DaoFichero {
 
     }
 
-    public void guardarCliente(String idCliente){
-        SerializarObjeto.serializarObjeto("ejemplo-JL-Puc\\DataClientes\\" + idCliente + ".txt", Cliente.class);
-    }
 
     public void borrarCliente(String idCliente) {
         File archivo = new File("ejemplo-JL-Puc\\DataClientes\\" + idCliente + ".txt");

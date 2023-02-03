@@ -1,55 +1,104 @@
 package Controlador;
 
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import DAO.DaoFichero;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import DAO.DaoCuentas;
 import Exceptions.ExcepcionCliente;
 import Exceptions.ExcepcionCuenta;
 import Model.Cliente;
-import Model.ListaDeClientes;
+import Model.Cuenta;
+import Model.ListaDeCuentas;
 
 public class ControladorCuenta {
     Cliente cliente = new Cliente();
     ControladorCliente controladorCliente;
-    ListaDeClientes listaClientes = new ListaDeClientes();
-    DaoFichero daoFichero = new DaoFichero();
+    Pattern p;
+    Matcher m;
 
-    public ControladorCuenta( ListaDeClientes listaClientes ) {
-        this.listaClientes = listaClientes;
+    DaoCuentas daoCuentas = new DaoCuentas();
+
+    public ControladorCuenta( ) {
+    }
+
+    public void agregarCuentaNueva(String idCliente, String idCuenta, String saldo) throws ExcepcionCuenta, IOException {
+
+        ListaDeCuentas listaDeCuentas = new ListaDeCuentas();
+        Cuenta cuenta = new Cuenta(idCuenta, saldo);
+        listaDeCuentas.agregarCuenta(cuenta);
+
+        daoCuentas.agregarCuentas(idCliente, listaDeCuentas);
+
     }
 
 
-    public boolean borrarCuenta(String nombre, String idCliente, String idCuenta) throws ExcepcionCuenta, ExcepcionCliente{
+    public void agregarCuenta(String idCliente, String idCuenta, String saldo) throws ExcepcionCuenta, IOException, ExcepcionCliente {
 
-        if(this.listaClientes.getCliente(idCliente).getCuentas().size() != 1 ) {
+        ListaDeCuentas listaDeCuentas = daoCuentas.iniciarDatosCuentas(idCliente);
 
-            if(Double.parseDouble(this.listaClientes.getCliente(idCliente).getCuentas().getCuenta(idCuenta).getSaldo()) == 0 ) {//Preguntar si el saldo de la cuenta es igual a 0, solo de esa manera se podrá borrar una cuenta.
+        if( listaDeCuentas == null) {
+            Cuenta cuenta = new Cuenta(idCuenta, saldo);
+                listaDeCuentas.agregarCuenta(cuenta);
+    
+                daoCuentas.agregarCuentas(idCliente, listaDeCuentas);
+            
+        } else {
 
-                this.listaClientes.getCliente(idCliente).getCuentas().eliminarCuenta(idCuenta); //Eliminar el cliente para sobreescribirlo con la 
-                daoFichero.actualizarCliente( this.listaClientes.getCliente(idCliente));
-                System.out.println("Cuenta borrada exitosamente");
-                return true;
-            } else {
-                throw new ExcepcionCuenta("La cuenta que quiere borrar aun tiene dinero");
+            if(listaDeCuentas.verificarNumeroCuenta(idCuenta) == false) { //Si es falso significa que no existe la cuenta en el cliente
+                Cuenta cuenta = new Cuenta(idCuenta, saldo);
+                listaDeCuentas.agregarCuenta(cuenta);
+    
+                daoCuentas.agregarCuentas(idCliente, listaDeCuentas);
+    
+            } else{
+                throw new ExcepcionCuenta("El numero de cuenta ya existe en tu usuario");
             }
+        }
+        
+
+    }
+
+
+    public boolean borrarCuenta(String idCliente, String idCuenta) throws ExcepcionCuenta, ExcepcionCliente, FileNotFoundException{
+
+        ListaDeCuentas listaDeCuentas = daoCuentas.iniciarDatosCuentas(idCliente);
+
+        if(listaDeCuentas.verificarNumeroCuenta(idCuenta)) {
+
+            if( listaDeCuentas.size() != 1) {
+                if(Double.parseDouble(listaDeCuentas.getCuenta(idCuenta).getSaldo()) == 0 ) {//Preguntar si el saldo de la cuenta es igual a 0, solo de esa manera se podrá borrar una cuenta.
+
+                    listaDeCuentas.eliminarCuenta(idCuenta);
+    
+                    daoCuentas.borrarCuenta(idCliente, listaDeCuentas);
+                    System.out.println("Cuenta borrada exitosamente");
+                    return true;
+                } else {
+                    throw new ExcepcionCuenta("La cuenta que quiere borrar aun tiene dinero");
+                }
+            } else {
+                return false;
+            }
+            
 
         } else {
-            return false;
+            throw new ExcepcionCuenta("La cuenta que quiere borrar no existe");
 
         }
 
         
     }
 
-    public boolean depositarSaldoCuenta(String nombreCliente, String idCliente, String idCuenta, double deposito ) throws ExcepcionCuenta, ExcepcionCliente, IOException {
+    public boolean depositarSaldoCuenta(String idCliente, String idCuenta, double deposito ) throws ExcepcionCuenta, ExcepcionCliente, IOException {
+
+        ListaDeCuentas listaDeCuentas = daoCuentas.iniciarDatosCuentas(idCliente);
 
         if(deposito > 0) {
-            this.listaClientes.getCliente(idCliente).getCuentas().getCuenta(idCuenta).depositarSaldo(deposito);
+            listaDeCuentas.getCuenta(idCuenta).depositarSaldo(deposito);
 
-            cliente = this.listaClientes.getCliente(idCliente);
-            daoFichero.actualizarCliente(cliente);
-
+            daoCuentas.actualizarCuenta(idCliente, listaDeCuentas);
             return true;
         }
 
@@ -57,22 +106,18 @@ public class ControladorCuenta {
 
     }
 
-    public boolean retirarSaldoCuenta(String nombreCliente, String idCliente, String idCuenta, double retiro ) throws ExcepcionCuenta, ExcepcionCliente, IOException {
+    public boolean retirarSaldoCuenta(String idCliente, String idCuenta, double retiro ) throws ExcepcionCuenta, ExcepcionCliente, IOException {
 
-        this.listaClientes.getCliente(idCliente).getCuentas().getCuenta(idCuenta).retirarSaldo(retiro);
+        ListaDeCuentas listaDeCuentas = daoCuentas.iniciarDatosCuentas(idCuenta);
 
-        cliente = this.listaClientes.getCliente(idCliente);
-        daoFichero.actualizarCliente(cliente);
+        listaDeCuentas.getCuenta(idCuenta).retirarSaldo(retiro);
+
+        
+        daoCuentas.actualizarCuenta(idCliente, listaDeCuentas);
 
          return true;
        
     }
-
-
-
-
-
-
 
 
 

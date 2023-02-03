@@ -6,18 +6,21 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import DAO.DaoCuentas;
 import DAO.DaoFichero;
 import Exceptions.ExcepcionCliente;
 import Exceptions.ExcepcionCuenta;
 import Model.Cliente;
 import Model.Cuenta;
 import Model.ListaDeClientes;
+import Model.ListaDeCuentas;
 
 public class ControladorCliente {
     
     Cliente cliente = new Cliente();
     DaoFichero daoFichero = new DaoFichero();
-    ControladorCuenta controladorCuenta;
+    DaoCuentas daoCuentas = new DaoCuentas();
+    ControladorCuenta controladorCuenta = new ControladorCuenta();
     Pattern p;
     Matcher m;
 
@@ -31,17 +34,14 @@ public class ControladorCliente {
 
         if( validarDatosCliente(nombreCliente, idCliente, idCuenta, saldo)) {
             
-            if(verificarIdClienteExistencia(idCliente, nombreCliente) == false) { //Verificar el ID del cliente, si es falso significa que el nombre y el ID no coincide con alguna existencia.
-                if( false == verificarNumeroCuenta(idCliente, idCuenta)) { // Aquí validamos si el número de cuenta del cliente ya existe, en dado caso exista no se registra
-                    
-                    Cuenta cuenta = new Cuenta(idCuenta, saldo);
-                    Cliente cliente = new Cliente(idCliente, nombreCliente, cuenta);
+            if(verificarIdClienteExistencia(idCliente) == false) { //Verificar el ID del cliente, si es falso significa que el nombre y el ID no coincide con alguna existencia.
 
-                    this.listaClientes.agregarCliente(cliente);
+                    controladorCuenta.agregarCuentaNueva(idCliente, idCuenta, saldo);
 
-                    daoFichero.agregarCuenta(cliente);
-                    
-                }
+                    Cliente cliente = new Cliente(idCliente, nombreCliente);
+
+                    daoFichero.agregarCliente(cliente);
+
                 
             }
      
@@ -49,50 +49,29 @@ public class ControladorCliente {
     }
 
 
-    public void borrarCliente(String nombreCliente,  String idCliente) throws ExcepcionCliente{
-        Cliente cliente = new Cliente();
+    public void borrarCliente( String idCliente) throws ExcepcionCliente, ExcepcionCuenta{
 
-        cliente = traerDatosCliente(idCliente);
-
-        if( nombreCliente.equals(cliente.getNombre()) && idCliente.equals(cliente.getIdCliente())) {
-            this.listaClientes.eliminar(idCliente);
-            daoFichero.borrarCliente(idCliente);
-            
-        } else {
-            throw new ExcepcionCliente("ID del cliente y el nombre no coinciden");
-        }
+        daoFichero.borrarCliente(idCliente);
 
     }
 
     //Borrar una cuenta del cliente
-    public void borrarCuentaCliente(String nombreCliente,  String idCliente, String idCuenta ) throws ExcepcionCuenta, ExcepcionCliente {
-        if(controladorCuenta.borrarCuenta(nombreCliente, idCliente, idCuenta) == false) {
+    public void borrarCuentaCliente(String nombreCliente,  String idCliente, String idCuenta ) throws ExcepcionCuenta, ExcepcionCliente, FileNotFoundException {
+        if(controladorCuenta.borrarCuenta(idCliente, idCuenta) == false) {
             System.out.println("Usted solamente tiene una cuenta, su usuario será borrado, bye, bye...");
             daoFichero.borrarCliente(idCliente);
-            this.listaClientes.eliminar(idCliente);
         }
     }
 
-    //Depositar dinero en cuenta
-    public void depositarDineroCuenta(String nombreCliente,  String idCliente, String idCuenta, double deposito) throws ExcepcionCuenta, ExcepcionCliente, IOException {
-        
-        controladorCuenta.depositarSaldoCuenta(nombreCliente, idCliente, idCuenta, deposito);
-
-    }
-
-    //Retirar dinero en cuenta
-    public void retirarDineroCuenta(String nombreCliente,  String idCliente, String idCuenta, double retiro) throws ExcepcionCuenta, ExcepcionCliente, IOException {
-        
-        controladorCuenta.retirarSaldoCuenta(nombreCliente, idCliente, idCuenta, retiro);
-    }
 
     //Cambiar nombre de cliente
     public void cambiarNombreCliente(String nombreCliente,  String idCliente ) throws ExcepcionCliente {
         validarNombreCliente(nombreCliente); //Validar el nombre que se desea agregar como modificacion
 
-        listaClientes.getCliente(idCliente).setNombre(nombreCliente);
+        Cliente cliente = daoFichero.iniciarDatos(idCliente);
+        cliente.setNombre(nombreCliente);
 
-        daoFichero.actualizarCliente(listaClientes.getCliente(idCliente));
+        daoFichero.actualizarCliente(cliente);
         
     }
 
@@ -175,32 +154,16 @@ public class ControladorCliente {
 
     }
 
-    public boolean verificarNumeroCuenta (String idCliente, String idCuenta) throws ExcepcionCuenta, ExcepcionCliente {
 
-        int contador = 0;
-
-        cliente = traerDatosCliente(idCliente); 
-        ArrayList<String> listaNumerosCuentas = new ArrayList<String>();
-
-        while( contador < cliente.getCuentas().size() ) {
-            listaNumerosCuentas.add(cliente.getCuentas().getListaCuentas().get(contador).getIdCuenta()); //Llenamos la lista con los numeros de las cuentas del cliente
-            contador++;
-        }
-
-        if(listaNumerosCuentas.contains(idCuenta) ) { //Si es verdad entonces esa cuenta existe.
-            throw new ExcepcionCuenta("El número de cuenta ya existe en tu usuario");
-        }
-        
-        return false;
-    }
-
-
-
-    public void imprimirClientes( ) {
+    public void imprimirClientes( ) throws FileNotFoundException, ExcepcionCuenta, ExcepcionCliente {
         int contadorClientes = 0;
         ListaDeClientes listaClientes = new ListaDeClientes();
-       
+        listaClientes.cargarClientes();
+        ArrayList<ListaDeCuentas> listaDeCuentas = daoCuentas.traerCuentasCliente();
+        
         while(contadorClientes < listaClientes.size()) {
+            listaClientes.getListaClientes().get(contadorClientes).setCuentas(listaDeCuentas.get(contadorClientes));
+            
             System.out.println(listaClientes.getListaClientes().get(contadorClientes).imprimirCliente()); 
             contadorClientes++;
         }

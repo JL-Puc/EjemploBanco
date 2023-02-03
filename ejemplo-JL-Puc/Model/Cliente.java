@@ -3,6 +3,7 @@ package Model;
 import java.io.Serializable;
 
 import Exceptions.ExcepcionCliente;
+import Exceptions.ExcepcionCuenta;
 
 public class Cliente implements Serializable{
     
@@ -17,6 +18,11 @@ public class Cliente implements Serializable{
     }
 
     public Cliente (){
+    }
+
+    public Cliente ( String idCliente, String nombre) {
+        setNombre(nombre);
+        setIdCliente(idCliente);
     }
 
 
@@ -34,7 +40,7 @@ public class Cliente implements Serializable{
         return clienteDatos;
     }
 
-    public void borrarCuenta(String idCuenta ) throws ExcepcionCliente {
+    public void borrarCuenta(String idCuenta ) throws ExcepcionCliente, ExcepcionCuenta {
         cuentas.eliminarCuenta(idCuenta);
     }
 

@@ -2,6 +2,7 @@
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import Controlador.ControladorCliente;
+import Controlador.ControladorCuenta;
 import DAO.DaoFichero;
 import Exceptions.ExcepcionCliente;
 import Exceptions.ExcepcionCuenta;
@@ -16,27 +17,31 @@ public class Main {
         String nombre;
         String idCuenta = "";
         String saldo;
-        String idCliente;
-        ListaDeClientes listaClientes = new ListaDeClientes();
+        String idCliente = "";
         ControladorCliente control = new ControladorCliente();
+        ControladorCuenta controlCuentas = new ControladorCuenta();
         
-        /*
-            idCliente = "12453";
-            nombre = "Luis";
-            idCuenta = "1234567822222222";
-            saldo = "5555";
-         */
+        
+        idCliente = "12453";
+        nombre = "Pepe";
+        idCuenta = "1234567822222222";
+        saldo = "1000";
+        
 
-                try {
-                    
-                    listaClientes.cargarClientes();
-                    control = new ControladorCliente(listaClientes);
                 
-                    control.imprimirClientes();
+        try {
+            control.imprimirClientes();
+            control.cambiarNombreCliente(nombre, idCliente);
+            control.imprimirClientes();
+        } catch (ExcepcionCuenta e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
                     
-                } catch (IOException e) {
-                    System.out.println(e.getMessage());
-                } 
+            
             
         
             

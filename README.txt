@@ -39,3 +39,4 @@ Lo que se busca es poder tener a un objeto que queramos en el momento que lo que
 
 Hasta este punto hemos implementado la serialización, agregando clientes, modificando clientes, sus cuentas y sus saldos (con retiro y depósito);
 
+-Creamos la el DaoCuentas para poder manipular las cuentas, pues ahora ya no serializaremos al cliente con sus cuentas, si no que el cliente será serilizado con solo su ID y su nombre en un txt y su lista de cuentas en otro txt

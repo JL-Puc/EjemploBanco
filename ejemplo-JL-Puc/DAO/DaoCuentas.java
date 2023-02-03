@@ -27,7 +27,7 @@ public class DaoCuentas {
             System.out.println("Cargado cuenta del archivo del cliente: " + idCliente);
             return listaDeCuentas;
         } else {
-           throw new ExcepcionCuenta("Número de cuenta inexistente");
+           return listaDeCuentas = null;
         }
 
     }
@@ -48,7 +48,7 @@ public class DaoCuentas {
         }
     }
 
-    public ArrayList<ListaDeCuentas> traerCuentasCliente ( ) throws FileNotFoundException, ExcepcionCuenta { //Con un ArrayList traemos todos los clientes con sus datos 
+    public ArrayList<ListaDeCuentas> traerCuentasCliente ( ) throws FileNotFoundException, ExcepcionCuenta { //Con un ArrayList traemos todas las cuentas con sus datos 
         File carpeta = new File("ejemplo-JL-Puc\\DataClientes\\"); 
 
         String[] listaArchivos = carpeta.list();

@@ -3,7 +3,7 @@ package Model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import Exceptions.ExcepcionCliente;
+import Exceptions.ExcepcionCuenta;
 
 public class ListaDeCuentas implements Serializable{
 
@@ -17,7 +17,7 @@ public class ListaDeCuentas implements Serializable{
         listaCuenta.add(cuenta);
     }
 
-    public void eliminarCuenta(String idCuenta ) throws ExcepcionCliente {
+    public void eliminarCuenta(String idCuenta ) throws ExcepcionCuenta {
         listaCuenta.remove(getCuenta(idCuenta));
     }
 
@@ -25,16 +25,16 @@ public class ListaDeCuentas implements Serializable{
         return listaCuenta;
     }
 
-    public Cuenta getCuenta(String idCuenta ) throws ExcepcionCliente {
+    public Cuenta getCuenta(String idCuenta ) throws ExcepcionCuenta {
         int contador = 0;
-
+        Cuenta cuenta = null;
         while(contador < listaCuenta.size() ) {
             if(idCuenta.equals(listaCuenta.get(contador).getIdCuenta()) ){
                 return listaCuenta.get(contador);
             }
         contador++;
         }
-        throw new ExcepcionCliente("Número de cuenta no encontrado");
+        return cuenta;
     }
 
     public int size( ) {
@@ -45,13 +45,17 @@ public class ListaDeCuentas implements Serializable{
         return listaCuenta.get(listaCuenta.size()-1);
     }
 
+    public boolean verificarNumeroCuenta(String idCuenta ) {
+        int contador = 0;
 
-
-
-
-
-
-
+        while(contador <listaCuenta.size() ) {
+            if(listaCuenta.get(contador).getIdCuenta().equals(idCuenta) ) {
+                return true;
+            }
+            contador++;
+        }
+        return false;
+    }
 
 
 }
