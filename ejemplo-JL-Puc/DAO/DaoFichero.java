@@ -69,6 +69,20 @@ public class DaoFichero {
         return listaClientes;
     }
 
+    public ArrayList<String> traerIdClientes ( ) throws FileNotFoundException, ExcepcionCliente { //Con un ArrayList traemos todos los clientes con sus datos 
+        File carpeta = new File("ejemplo-JL-Puc\\Ejemplo01"); 
+
+        String[] listaArchivos = carpeta.list();
+        ArrayList<String> listaIdClientes = new ArrayList<>();
+        
+        for(String string : listaArchivos ) {
+            StringTokenizer token = new StringTokenizer(string, ".");
+            listaIdClientes.add(token.nextToken());
+        }
+
+        return listaIdClientes;
+    }
+
     
 
 
