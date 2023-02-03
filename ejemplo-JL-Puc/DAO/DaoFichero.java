@@ -18,11 +18,11 @@ public class DaoFichero {
 
     public void agregarCuenta(Cliente cliente) throws ExcepcionCuenta, IOException, ExcepcionCliente{
 
-        SerializarObjeto.serializarObjeto("ejemplo-JL-Puc\\Ejemplo01\\" + cliente.getIdCliente() + ".txt", cliente);
+        SerializarObjeto.serializarObjeto("ejemplo-JL-Puc\\DataClientes\\" + cliente.getIdCliente() + ".txt", cliente);
     }
 
     public Cliente iniciarDatos(String idCliente) throws ExcepcionCliente{
-        Cliente clienteAux = SerializarObjeto.deserializarObjeto("ejemplo-JL-Puc\\Ejemplo01\\" + idCliente + ".txt", Cliente.class);
+        Cliente clienteAux = SerializarObjeto.deserializarObjeto("ejemplo-JL-Puc\\DataClientes\\" + idCliente + ".txt", Cliente.class);
 
         if (clienteAux != null || !clienteAux.getIdCliente().equals(null)){
             System.out.println("Cargado datos del archivo del cliente: " + idCliente);
@@ -34,16 +34,16 @@ public class DaoFichero {
     }
 
     public void guardarCliente(String idCliente){
-        SerializarObjeto.serializarObjeto("ejemplo-JL-Puc\\Ejemplo01\\" + idCliente + ".txt", Cliente.class);
+        SerializarObjeto.serializarObjeto("ejemplo-JL-Puc\\DataClientes\\" + idCliente + ".txt", Cliente.class);
     }
 
     public void borrarCliente(String idCliente) {
-        File archivo = new File("ejemplo-JL-Puc\\Ejemplo01\\" + idCliente + ".txt");
+        File archivo = new File("ejemplo-JL-Puc\\DataClientes\\" + idCliente + ".txt");
         archivo.delete();
     }
 
     public void actualizarCliente(Cliente cliente) throws ExcepcionCliente{
-        String path = "ejemplo-JL-Puc\\Ejemplo01\\" + cliente.getIdCliente() + ".txt";
+        String path = "ejemplo-JL-Puc\\DataClientes\\" + cliente.getIdCliente() + ".txt";
         File archivo = new File(path);
 
         if( archivo.exists()) {
@@ -55,7 +55,7 @@ public class DaoFichero {
 
 
     public ArrayList<Cliente> traerClientes ( ) throws FileNotFoundException, ExcepcionCliente { //Con un ArrayList traemos todos los clientes con sus datos 
-        File carpeta = new File("ejemplo-JL-Puc\\Ejemplo01"); 
+        File carpeta = new File("ejemplo-JL-Puc\\DataClientes\\"); 
 
         String[] listaArchivos = carpeta.list();
         Cliente cliente;
@@ -70,7 +70,7 @@ public class DaoFichero {
     }
 
     public ArrayList<String> traerIdClientes ( ) throws FileNotFoundException, ExcepcionCliente { //Con un ArrayList traemos todos los clientes con sus datos 
-        File carpeta = new File("ejemplo-JL-Puc\\Ejemplo01"); 
+        File carpeta = new File("ejemplo-JL-Puc\\DataClientes\\"); 
 
         String[] listaArchivos = carpeta.list();
         ArrayList<String> listaIdClientes = new ArrayList<>();

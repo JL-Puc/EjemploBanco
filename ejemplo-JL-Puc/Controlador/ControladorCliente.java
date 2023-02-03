@@ -1,5 +1,6 @@
 package Controlador;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -15,20 +16,13 @@ import Model.ListaDeClientes;
 public class ControladorCliente {
     
     Cliente cliente = new Cliente();
-    ListaDeClientes listaClientes = new ListaDeClientes();
     DaoFichero daoFichero = new DaoFichero();
     ControladorCuenta controladorCuenta;
     Pattern p;
     Matcher m;
 
     //Constructor
-    public ControladorCliente(ListaDeClientes listaClientes) {
-        this.listaClientes = listaClientes;
-        this.controladorCuenta = new ControladorCuenta(this.listaClientes);
-    }
-
-    public ControladorCliente( ) {
-
+    public ControladorCliente() {
     }
 
 
@@ -167,9 +161,12 @@ public class ControladorCliente {
         }
     }
 
-    public boolean verificarIdClienteExistencia( String idCliente, String nombreCliente) throws ExcepcionCliente {
-        
-        if(this.listaClientes.getCliente(idCliente).getIdCliente().equals(idCliente) &&  !this.listaClientes.getCliente(idCliente).getNombre().equals(nombreCliente)) {
+    public boolean verificarIdClienteExistencia( String idCliente) throws ExcepcionCliente, FileNotFoundException {
+        ArrayList<String> listaIdClientes = new ArrayList<>();
+
+        listaIdClientes = daoFichero.traerIdClientes();
+
+        if(listaIdClientes.contains(idCliente)) {
                 
         throw new ExcepcionCliente("El ID ya existe, ingrese uno diferente");
         }
@@ -197,16 +194,14 @@ public class ControladorCliente {
         return false;
     }
 
-    public Cliente traerDatosCliente ( String idCliente) throws ExcepcionCliente {
-        return this.listaClientes.getCliente(idCliente);
-    }
 
 
     public void imprimirClientes( ) {
         int contadorClientes = 0;
+        ListaDeClientes listaClientes = new ListaDeClientes();
        
-        while(contadorClientes < this.listaClientes.size()) {
-            System.out.println(this.listaClientes.getListaClientes().get(contadorClientes).imprimirCliente()); 
+        while(contadorClientes < listaClientes.size()) {
+            System.out.println(listaClientes.getListaClientes().get(contadorClientes).imprimirCliente()); 
             contadorClientes++;
         }
                 
