@@ -19,8 +19,8 @@ public class ListaDeClientes implements Serializable{
         listaClientes.add(cliente);
     }
 
-    public void eliminar(Cliente cliente ) {
-        listaClientes.remove(cliente);
+    public void eliminar(String idCuenta ) throws ExcepcionCliente {
+        listaClientes.remove(getCliente(idCuenta));
     }
 
     public void cargarClientes( ) throws FileNotFoundException, ExcepcionCliente{

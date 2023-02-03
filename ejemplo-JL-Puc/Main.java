@@ -31,15 +31,7 @@ public class Main {
                     
                     listaClientes.cargarClientes();
                     control = new ControladorCliente(listaClientes);
-                    control.imprimirClientes();
-                    
-                    idCliente = "12345";
-                    nombre = "Luis";
-                    idCuenta = "1234567812345678";
-                    saldo = "500";
-                    
-                    control.cambiarNombreCliente(nombre, idCliente);
-
+                
                     control.imprimirClientes();
                     
                 } catch (IOException e) {

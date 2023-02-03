@@ -61,7 +61,7 @@ public class ControladorCliente {
         cliente = traerDatosCliente(idCliente);
 
         if( nombreCliente.equals(cliente.getNombre()) && idCliente.equals(cliente.getIdCliente())) {
-            this.listaClientes.eliminar(cliente);
+            this.listaClientes.eliminar(idCliente);
             daoFichero.borrarCliente(idCliente);
             
         } else {
@@ -72,7 +72,11 @@ public class ControladorCliente {
 
     //Borrar una cuenta del cliente
     public void borrarCuentaCliente(String nombreCliente,  String idCliente, String idCuenta ) throws ExcepcionCuenta, ExcepcionCliente {
-        controladorCuenta.borrarCuenta(nombreCliente, idCliente, idCuenta);
+        if(controladorCuenta.borrarCuenta(nombreCliente, idCliente, idCuenta) == false) {
+            System.out.println("Usted solamente tiene una cuenta, su usuario será borrado, bye, bye...");
+            daoFichero.borrarCliente(idCliente);
+            this.listaClientes.eliminar(idCliente);
+        }
     }
 
     //Depositar dinero en cuenta

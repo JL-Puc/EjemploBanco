@@ -22,14 +22,23 @@ public class ControladorCuenta {
 
     public boolean borrarCuenta(String nombre, String idCliente, String idCuenta) throws ExcepcionCuenta, ExcepcionCliente{
 
-         if(Integer.parseInt(this.listaClientes.getCliente(idCliente).getCuentas().getCuenta(idCuenta).getSaldo()) == 0 ) {//Preguntar si el saldo de la cuenta es igual a 0, solo de esa manera se podrá borrar una cuenta.
+        if(this.listaClientes.getCliente(idCliente).getCuentas().size() != 1 ) {
 
-            this.listaClientes.getCliente(idCliente).getCuentas().eliminarCuenta(idCuenta); //Eliminar el cliente para sobreescribirlo con la 
-            System.out.println("Cuenta borrada exitosamente");
-            return true;
+            if(Double.parseDouble(this.listaClientes.getCliente(idCliente).getCuentas().getCuenta(idCuenta).getSaldo()) == 0 ) {//Preguntar si el saldo de la cuenta es igual a 0, solo de esa manera se podrá borrar una cuenta.
+
+                this.listaClientes.getCliente(idCliente).getCuentas().eliminarCuenta(idCuenta); //Eliminar el cliente para sobreescribirlo con la 
+                daoFichero.actualizarCliente( this.listaClientes.getCliente(idCliente));
+                System.out.println("Cuenta borrada exitosamente");
+                return true;
+            } else {
+                throw new ExcepcionCuenta("La cuenta que quiere borrar aun tiene dinero");
+            }
+
         } else {
-            throw new ExcepcionCuenta("La cuenta que quiere borrar aun tiene dinero");
+            return false;
+
         }
+
         
     }
 
