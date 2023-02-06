@@ -32,7 +32,7 @@ public class Cliente implements Serializable{
         int contadorCuentas = 0;
 
         while( contadorCuentas < cuentas.size() ){
-            clienteDatos += "Cuenta: " + cuentas.getListaCuentas().get(contadorCuentas).getIdCuenta() + "\t\tSaldo: " + cuentas.getListaCuentas().get(contadorCuentas).getSaldo() + "\n";
+            clienteDatos += "\t\t\t\t\tCuenta: " + cuentas.getListaCuentas().get(contadorCuentas).getIdCuenta() + "\t\tSaldo: " + "$" + cuentas.getListaCuentas().get(contadorCuentas).getSaldo() + "\n";
 
             contadorCuentas++;
         }

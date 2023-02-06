@@ -1,0 +1,8 @@
+																				Reporte Clientes
+					ID: 11111	Nombre: Jose
+					Cuenta: 1212121212121212		Saldo: $1000
+
+					ID: 12453	Nombre: Pepe
+					Cuenta: 1234567822222222		Saldo: $6055.0
+					Cuenta: 1234567811111111		Saldo: $5555
+

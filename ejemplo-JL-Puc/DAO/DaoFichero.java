@@ -46,7 +46,7 @@ public class DaoFichero {
         if( archivo.exists()) {
             SerializarObjeto.serializarObjeto(path, cliente);
         } else {
-            throw new ExcepcionCliente("Error al actualizar");
+            throw new ExcepcionCliente("Error al actualizar, la ruta del cliente no existe");
         }
     }
 

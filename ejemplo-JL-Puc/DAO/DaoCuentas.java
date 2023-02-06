@@ -24,7 +24,6 @@ public class DaoCuentas {
         ListaDeCuentas listaDeCuentas = SerializarObjeto.deserializarObjeto("ejemplo-JL-Puc\\DataCuentas\\" + idCliente + ".txt", ListaDeCuentas.class);
 
         if (listaDeCuentas != null ){
-            System.out.println("Cargado cuenta del archivo del cliente: " + idCliente);
             return listaDeCuentas;
         } else {
            return listaDeCuentas = null;

@@ -9,6 +9,8 @@ import Exceptions.ExcepcionCuenta;
 import Model.Cliente;
 import Model.Cuenta;
 import Model.ListaDeClientes;
+import reportes.TextPrinter;
+import reportes.ConvertidorPDF;
 
 public class Main {
     
@@ -27,19 +29,13 @@ public class Main {
         idCuenta = "1234567822222222";
         saldo = "1000";
         
+        
+ 
+            ConvertidorPDF conv = new ConvertidorPDF();
 
-                
-        try {
-            control.imprimirClientes();
-            control.cambiarNombreCliente(nombre, idCliente);
-            control.imprimirClientes();
-        } catch (ExcepcionCuenta e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+            conv.generarReporte();
+            
+        
                     
             
             

@@ -11,7 +11,6 @@ import DAO.DaoFichero;
 import Exceptions.ExcepcionCliente;
 import Exceptions.ExcepcionCuenta;
 import Model.Cliente;
-import Model.Cuenta;
 import Model.ListaDeClientes;
 import Model.ListaDeCuentas;
 
@@ -28,7 +27,6 @@ public class ControladorCliente {
     public ControladorCliente() {
     }
 
-
     //Validar datos
     public void agregarClienteValido(String nombreCliente,  String idCliente, String idCuenta, String saldo ) throws ExcepcionCliente, ExcepcionCuenta, IOException {
 
@@ -41,8 +39,7 @@ public class ControladorCliente {
                     Cliente cliente = new Cliente(idCliente, nombreCliente);
 
                     daoFichero.agregarCliente(cliente);
-
-                
+   
             }
      
         }
@@ -68,23 +65,21 @@ public class ControladorCliente {
     public void cambiarNombreCliente(String nombreCliente,  String idCliente ) throws ExcepcionCliente {
         validarNombreCliente(nombreCliente); //Validar el nombre que se desea agregar como modificacion
 
-        Cliente cliente = daoFichero.iniciarDatos(idCliente);
-        cliente.setNombre(nombreCliente);
+        Cliente cliente = daoFichero.iniciarDatos(idCliente); //Recuperar los datos del cliente con el ID ingresado
+        cliente.setNombre(nombreCliente); //Reasignarle el nuevo nombre al cliente 
 
-        daoFichero.actualizarCliente(cliente);
+        daoFichero.actualizarCliente(cliente); //Serializarlo de nuevo con su actualización
         
     }
 
 
 
-    //Validar datos
+    //Validar datos de entrada para el registro de un cliente
     public boolean validarDatosCliente(String nombre,  String idCliente, String idCuenta, String saldo  ) throws ExcepcionCliente, ExcepcionCuenta, IOException {
 
         if( validarNombreCliente(nombre) == true && validarIdCliente(idCliente) == true && validarNumeroCuenta(idCuenta) == true && validarSaldoCuenta(saldo) == true) {
             return true;
-     
         }
-
         return false;
     }
 
@@ -155,16 +150,16 @@ public class ControladorCliente {
     }
 
 
-    public void imprimirClientes( ) throws FileNotFoundException, ExcepcionCuenta, ExcepcionCliente {
+    public void generarReporte( ) throws FileNotFoundException, ExcepcionCuenta, ExcepcionCliente {
         int contadorClientes = 0;
         ListaDeClientes listaClientes = new ListaDeClientes();
-        listaClientes.cargarClientes();
-        ArrayList<ListaDeCuentas> listaDeCuentas = daoCuentas.traerCuentasCliente();
+        listaClientes.cargarClientes(); //Cargar los clientes registrados
+        ArrayList<ListaDeCuentas> listaDeCuentas = daoCuentas.traerCuentasCliente(); //Inicializar todas las cuentas existentes
         
-        while(contadorClientes < listaClientes.size()) {
+        while(contadorClientes < listaClientes.size()) { //asignarle a cada cliente sus cuentas
             listaClientes.getListaClientes().get(contadorClientes).setCuentas(listaDeCuentas.get(contadorClientes));
             
-            System.out.println(listaClientes.getListaClientes().get(contadorClientes).imprimirCliente()); 
+            System.out.println(listaClientes.getListaClientes().get(contadorClientes).imprimirCliente()); //Imprimir los datos del cliente
             contadorClientes++;
         }
                 
