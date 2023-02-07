@@ -2,9 +2,14 @@ package Controlador;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import DAO.DaoCuentas;
 import DAO.DaoFichero;
@@ -28,7 +33,7 @@ public class ControladorCliente {
     }
 
     //Validar datos
-    public void agregarClienteValido(String nombreCliente,  String idCliente, String idCuenta, String saldo ) throws ExcepcionCliente, ExcepcionCuenta, IOException {
+    public void agregarClienteValido(String nombreCliente,  String idCliente, String idCuenta, String saldo ) throws ExcepcionCliente, ExcepcionCuenta, IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException {
 
         if( validarDatosCliente(nombreCliente, idCliente, idCuenta, saldo)) {
             
@@ -53,7 +58,7 @@ public class ControladorCliente {
     }
 
     //Borrar una cuenta del cliente
-    public void borrarCuentaCliente(String nombreCliente,  String idCliente, String idCuenta ) throws ExcepcionCuenta, ExcepcionCliente, FileNotFoundException {
+    public void borrarCuentaCliente(String nombreCliente,  String idCliente, String idCuenta ) throws ExcepcionCuenta, ExcepcionCliente, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, IOException {
         if(controladorCuenta.borrarCuenta(idCliente, idCuenta) == false) {
             System.out.println("Usted solamente tiene una cuenta, su usuario será borrado, bye, bye...");
             daoFichero.borrarCliente(idCliente);
@@ -62,7 +67,7 @@ public class ControladorCliente {
 
 
     //Cambiar nombre de cliente
-    public void cambiarNombreCliente(String nombreCliente,  String idCliente ) throws ExcepcionCliente {
+    public void cambiarNombreCliente(String nombreCliente,  String idCliente ) throws ExcepcionCliente, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, IOException {
         validarNombreCliente(nombreCliente); //Validar el nombre que se desea agregar como modificacion
 
         Cliente cliente = daoFichero.iniciarDatos(idCliente); //Recuperar los datos del cliente con el ID ingresado

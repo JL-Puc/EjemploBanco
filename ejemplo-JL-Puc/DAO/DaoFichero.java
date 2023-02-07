@@ -3,8 +3,13 @@ package DAO;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import Exceptions.ExcepcionCliente;
 import Exceptions.ExcepcionCuenta;
@@ -16,12 +21,12 @@ public class DaoFichero {
     private ArrayList<Cliente> listaClientes = new ArrayList<Cliente>();
 
 
-    public void agregarCliente(Cliente cliente) throws ExcepcionCuenta, IOException, ExcepcionCliente{
+    public void agregarCliente(Cliente cliente) throws ExcepcionCuenta, IOException, ExcepcionCliente, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException{ // Agregar cliente serializandolo, solamente con sus datos de ID y nombre
 
         SerializarObjeto.serializarObjeto("ejemplo-JL-Puc\\DataClientes\\" + cliente.getIdCliente() + ".txt", cliente);
     }
 
-    public Cliente iniciarDatos(String idCliente) throws ExcepcionCliente{
+    public Cliente iniciarDatos(String idCliente) throws ExcepcionCliente{ //Deserializa un cliente 
         Cliente clienteAux = SerializarObjeto.deserializarObjeto("ejemplo-JL-Puc\\DataClientes\\" + idCliente + ".txt", Cliente.class);
 
         if (clienteAux != null || !clienteAux.getIdCliente().equals(null)){
@@ -34,12 +39,12 @@ public class DaoFichero {
     }
 
 
-    public void borrarCliente(String idCliente) {
+    public void borrarCliente(String idCliente) {// Elimina a un cliente, borrando su archivo 
         File archivo = new File("ejemplo-JL-Puc\\DataClientes\\" + idCliente + ".txt");
         archivo.delete();
     }
 
-    public void actualizarCliente(Cliente cliente) throws ExcepcionCliente{
+    public void actualizarCliente(Cliente cliente) throws ExcepcionCliente, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, IOException{ //Reescribe el archivo del cliente para su modificación
         String path = "ejemplo-JL-Puc\\DataClientes\\" + cliente.getIdCliente() + ".txt";
         File archivo = new File(path);
 
@@ -81,7 +86,4 @@ public class DaoFichero {
     }
 
     
-
-
-
 }

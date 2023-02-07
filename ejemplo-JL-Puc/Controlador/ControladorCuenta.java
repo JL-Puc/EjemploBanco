@@ -3,8 +3,14 @@ package Controlador;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
 import DAO.DaoCuentas;
 import Exceptions.ExcepcionCliente;
 import Exceptions.ExcepcionCuenta;
@@ -23,7 +29,7 @@ public class ControladorCuenta {
     public ControladorCuenta( ) {
     }
 
-    public void agregarCuentaNueva(String idCliente, String idCuenta, String saldo) throws ExcepcionCuenta, IOException {
+    public void agregarCuentaNueva(String idCliente, String idCuenta, String saldo) throws ExcepcionCuenta, IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException {
 
         ListaDeCuentas listaDeCuentas = new ListaDeCuentas();
         Cuenta cuenta = new Cuenta(idCuenta, saldo);
@@ -34,7 +40,7 @@ public class ControladorCuenta {
     }
 
 
-    public void agregarCuenta(String idCliente, String idCuenta, String saldo) throws ExcepcionCuenta, IOException, ExcepcionCliente {
+    public void agregarCuenta(String idCliente, String idCuenta, String saldo) throws ExcepcionCuenta, IOException, ExcepcionCliente, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException {
 
         ListaDeCuentas listaDeCuentas = daoCuentas.iniciarDatosCuentas(idCliente);
 
@@ -61,7 +67,7 @@ public class ControladorCuenta {
     }
 
 
-    public boolean borrarCuenta(String idCliente, String idCuenta) throws ExcepcionCuenta, ExcepcionCliente, FileNotFoundException{
+    public boolean borrarCuenta(String idCliente, String idCuenta) throws ExcepcionCuenta, ExcepcionCliente, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, IOException{
 
         ListaDeCuentas listaDeCuentas = daoCuentas.iniciarDatosCuentas(idCliente);
 
@@ -91,7 +97,7 @@ public class ControladorCuenta {
         
     }
 
-    public boolean depositarSaldoCuenta(String idCliente, String idCuenta, double deposito ) throws ExcepcionCuenta, ExcepcionCliente, IOException {
+    public boolean depositarSaldoCuenta(String idCliente, String idCuenta, double deposito ) throws ExcepcionCuenta, ExcepcionCliente, IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException {
 
         ListaDeCuentas listaDeCuentas = daoCuentas.iniciarDatosCuentas(idCliente);
 
@@ -106,7 +112,7 @@ public class ControladorCuenta {
 
     }
 
-    public boolean retirarSaldoCuenta(String idCliente, String idCuenta, double retiro ) throws ExcepcionCuenta, ExcepcionCliente, IOException {
+    public boolean retirarSaldoCuenta(String idCliente, String idCuenta, double retiro ) throws ExcepcionCuenta, ExcepcionCliente, IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException {
 
         ListaDeCuentas listaDeCuentas = daoCuentas.iniciarDatosCuentas(idCuenta);
 
